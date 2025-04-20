@@ -2,13 +2,21 @@ import consola.Consola;
 import gestor.GestorRecursos;
 import gestor.GestorUsuarios;
 import modelo.*;
+import notificaciones.ServicioNotificaciones;
+import notificaciones.ServicioNotificacionesEmail; // O ServicioNotificacionesSMS
 
 public class Main {
 
     public static void main(String[] args) {
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         GestorRecursos gestorRecursos = new GestorRecursos();
-        Consola consola = new Consola(gestorUsuarios, gestorRecursos);
+
+        // Aquí elegimos el servicio de notificación que vamos a inyectar
+        ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail(); // También podés probar con ServicioNotificacionesSMS
+
+
+        // Creamos consola pasando los gestores y el servicio de notificaciones
+        Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones);
 
         boolean salir = false;
 
@@ -25,25 +33,30 @@ public class Main {
                     gestorUsuarios.agregarUsuario(nuevo);
                     System.out.println("Usuario agregado.");
                     break;
+
                 case "2":
                     System.out.println("=== Lista de Usuarios ===");
                     gestorUsuarios.listarUsuarios();
                     break;
+
                 case "3":
                     consola.mostrarMenuAgregarRecurso();
                     String opcionRecurso = consola.leerEntrada("Seleccione tipo de recurso: ");
                     consola.procesarOpcionAgregarRecurso(opcionRecurso);
                     break;
+
                 case "4":
-                    System.out.println("=== Lista de Recursos ===");
-                    gestorRecursos.listarRecursos();
+                    consola.listarRecursos();
                     break;
+
                 case "5":
                     consola.realizarOperacionEnRecurso();
                     break;
+
                 case "0":
                     salir = true;
                     break;
+
                 default:
                     System.out.println("Opción inválida.");
             }
@@ -52,6 +65,8 @@ public class Main {
         System.out.println("¡Programa finalizado!");
     }
 }
+
+
 
 
 
