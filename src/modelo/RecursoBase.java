@@ -6,7 +6,7 @@ public abstract class RecursoBase implements RecursoDigital {
 
     public RecursoBase(String identificador) {
         this.identificador = identificador;
-        this.estado = EstadoRecurso.DISPONIBLE;
+        this.estado = EstadoRecurso.DISPONIBLE; // Estado inicial por defecto
     }
 
     @Override
@@ -23,12 +23,5 @@ public abstract class RecursoBase implements RecursoDigital {
     public void actualizarEstado(EstadoRecurso estado) {
         this.estado = estado;
     }
-
-    @Override
-    public String toString() {
-        return "RecursoBase{" +
-                "identificador='" + identificador + '\'' +
-                ", estado=" + estado +
-                '}';
-    }
 }
+

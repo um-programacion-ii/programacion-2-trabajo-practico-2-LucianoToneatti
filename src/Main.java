@@ -4,10 +4,11 @@ import gestor.GestorUsuarios;
 import modelo.*;
 
 public class Main {
+
     public static void main(String[] args) {
-        Consola consola = new Consola();
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         GestorRecursos gestorRecursos = new GestorRecursos();
+        Consola consola = new Consola(gestorUsuarios, gestorRecursos);
 
         boolean salir = false;
 
@@ -29,10 +30,9 @@ public class Main {
                     gestorUsuarios.listarUsuarios();
                     break;
                 case "3":
-                    String recursoId = consola.leerEntrada("ID del recurso: ");
-                    RecursoDigital recurso = new RecursoBase(recursoId) {}; // clase anónima para testeo
-                    gestorRecursos.agregarRecurso(recurso);
-                    System.out.println("Recurso agregado.");
+                    consola.mostrarMenuAgregarRecurso();
+                    String opcionRecurso = consola.leerEntrada("Seleccione tipo de recurso: ");
+                    consola.procesarOpcionAgregarRecurso(opcionRecurso);
                     break;
                 case "4":
                     System.out.println("=== Lista de Recursos ===");
@@ -40,7 +40,6 @@ public class Main {
                     break;
                 case "0":
                     salir = true;
-                    consola.cerrar();
                     break;
                 default:
                     System.out.println("Opción inválida.");
@@ -50,3 +49,5 @@ public class Main {
         System.out.println("¡Programa finalizado!");
     }
 }
+
+

@@ -1,12 +1,16 @@
 package consola;
 
-import java.util.Scanner;
+import modelo.*;
+import gestor.*;
 
 public class Consola {
-    private Scanner scanner;
 
-    public Consola() {
-        this.scanner = new Scanner(System.in);
+    private GestorUsuarios gestorUsuarios;
+    private GestorRecursos gestorRecursos;
+
+    public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos) {
+        this.gestorUsuarios = gestorUsuarios;
+        this.gestorRecursos = gestorRecursos;
     }
 
     public void mostrarMenuPrincipal() {
@@ -18,12 +22,46 @@ public class Consola {
         System.out.println("0. Salir");
     }
 
-    public String leerEntrada(String mensaje) {
-        System.out.print(mensaje);
-        return scanner.nextLine();
+    public void mostrarMenuAgregarRecurso() {
+        System.out.println("=== Agregar Recurso ===");
+        System.out.println("1. Agregar Libro");
+        System.out.println("2. Agregar Revista");
+        System.out.println("3. Agregar Audiolibro");
     }
 
-    public void cerrar() {
-        scanner.close();
+    public String leerEntrada(String mensaje) {
+        System.out.print(mensaje);
+        return new java.util.Scanner(System.in).nextLine();
+    }
+
+    public void procesarOpcionAgregarRecurso(String opcion) {
+        switch (opcion) {
+            case "1":
+                String idLibro = leerEntrada("ID del libro: ");
+                String autor = leerEntrada("Autor del libro: ");
+                Libro libro = new Libro(idLibro, autor);
+                gestorRecursos.agregarRecurso(libro);
+                System.out.println("Libro agregado.");
+                break;
+            case "2":
+                String idRevista = leerEntrada("ID de la revista: ");
+                String tema = leerEntrada("Tema de la revista: ");
+                Revista revista = new Revista(idRevista, tema);
+                gestorRecursos.agregarRecurso(revista);
+                System.out.println("Revista agregada.");
+                break;
+            case "3":
+                String idAudiolibro = leerEntrada("ID del audiolibro: ");
+                String duracion = leerEntrada("Duración del audiolibro: ");
+                Audiolibro audiolibro = new Audiolibro(idAudiolibro, duracion);
+                gestorRecursos.agregarRecurso(audiolibro);
+                System.out.println("Audiolibro agregado.");
+                break;
+            default:
+                System.out.println("Opción inválida.");
+        }
     }
 }
+
+
+

@@ -5,3 +5,6 @@ public interface RecursoDigital {
     EstadoRecurso getEstado();
     void actualizarEstado(EstadoRecurso estado);
 }
+
+
+
