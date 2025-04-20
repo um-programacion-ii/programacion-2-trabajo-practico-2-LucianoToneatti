@@ -15,6 +15,11 @@ public class Audiolibro extends RecursoBase {
 
     @Override
     public void mostrarDetalles() {
-        System.out.println("Audiolibro - ID: " + identificador + ", Duración: " + duracion + ", Estado: " + estado);
+        System.out.println("Audiolibro - ID: " + identificador +
+                ", Duración: " + duracion +
+                ", Estado: " + estado);
     }
 }
+
+
+
