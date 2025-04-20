@@ -12,5 +12,9 @@ public class Audiolibro extends RecursoBase {
     public String getDuracion() {
         return duracion;
     }
-}
 
+    @Override
+    public void mostrarDetalles() {
+        System.out.println("Audiolibro - ID: " + identificador + ", Duración: " + duracion + ", Estado: " + estado);
+    }
+}

@@ -23,5 +23,12 @@ public abstract class RecursoBase implements RecursoDigital {
     public void actualizarEstado(EstadoRecurso estado) {
         this.estado = estado;
     }
+
+    @Override
+    public void mostrarDetalles() {
+        System.out.println("ID: " + identificador);
+        System.out.println("Estado: " + estado);
+    }
 }
+
 

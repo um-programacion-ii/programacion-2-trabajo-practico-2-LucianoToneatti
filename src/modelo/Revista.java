@@ -12,4 +12,10 @@ public class Revista extends RecursoBase {
     public String getTema() {
         return tema;
     }
+
+    @Override
+    public void mostrarDetalles() {
+        System.out.println("Revista - ID: " + identificador + ", Tema: " + tema + ", Estado: " + estado);
+    }
 }
+
