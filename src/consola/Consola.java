@@ -33,6 +33,7 @@ public class Consola {
         System.out.println("6. Buscar usuario por nombre");
         System.out.println("7. Buscar recurso por título");
         System.out.println("8. Buscar por filtros");
+        System.out.println("9. Registrar prestamo");
         System.out.println("0. Salir");
     }
 

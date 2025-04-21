@@ -1,5 +1,6 @@
 import consola.Consola;
 import gestor.GestorBiblioteca;
+import gestor.GestorPrestamos;
 import gestor.GestorRecursos;
 import gestor.GestorUsuarios;
 import modelo.*;
@@ -12,6 +13,7 @@ public class Main {
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         GestorRecursos gestorRecursos = new GestorRecursos();
         GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos); // ✅ Instancia del gestor de biblioteca
+        GestorPrestamos gestorPrestamos = new GestorPrestamos();
 
         // Aquí elegimos el servicio de notificación que vamos a inyectar
         ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail();
@@ -64,6 +66,19 @@ public class Main {
 
                 case "8":
                     consola.buscarPorFiltros();
+                    break;
+
+                case "9":
+                    // Registrar préstamo
+                    String idUsuario = consola.leerEntrada("ID del usuario: ");
+                    String idRecurso = consola.leerEntrada("ID del recurso: ");
+                    gestorPrestamos.registrarPrestamo(idUsuario, idRecurso,
+                            java.time.LocalDate.now(),
+                            java.time.LocalDate.now().plusDays(14));
+                    break;
+
+                case "10":
+                    gestorPrestamos.mostrarPrestamos();
                     break;
 
                 case "0":
