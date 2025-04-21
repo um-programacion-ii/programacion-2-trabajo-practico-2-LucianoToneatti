@@ -2,20 +2,14 @@ package modelo;
 
 public class Audiolibro extends RecursoBase implements Prestable {
 
-    private String titulo;
     private String autor;
     private String duracion;
     private boolean prestado = false; // Estado de si el audiolibro está prestado
 
     public Audiolibro(String identificador, String titulo, String autor, String duracion) {
-        super(identificador);
-        this.titulo = titulo;
+        super(identificador, titulo);
         this.autor = autor;
         this.duracion = duracion;
-    }
-
-    public String getTitulo() {
-        return titulo;
     }
 
     public String getAutor() {
@@ -57,9 +51,3 @@ public class Audiolibro extends RecursoBase implements Prestable {
                 ", Autor: " + autor + ", Duración: " + duracion + ", Estado: " + estado);
     }
 }
-
-
-
-
-
-

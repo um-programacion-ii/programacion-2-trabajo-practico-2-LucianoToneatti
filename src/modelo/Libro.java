@@ -2,19 +2,13 @@ package modelo;
 
 public class Libro extends RecursoBase implements Prestable, Renovable {
 
-    private String titulo;
     private String autor;
     private boolean prestado = false; // Estado de si el libro está prestado
     private int vecesRenovado = 0;    // Contador de veces renovado
 
     public Libro(String identificador, String titulo, String autor) {
-        super(identificador);
-        this.titulo = titulo;
+        super(identificador, titulo); // Nuevo constructor con título
         this.autor = autor;
-    }
-
-    public String getTitulo() {
-        return titulo;
     }
 
     public String getAutor() {
@@ -48,7 +42,7 @@ public class Libro extends RecursoBase implements Prestable, Renovable {
 
     @Override
     public boolean renovar() {
-        if (estado == EstadoRecurso.PRESTADO && vecesRenovado < 3) {  // Si se puede renovar y no superó el límite
+        if (estado == EstadoRecurso.PRESTADO && vecesRenovado < 3) {
             vecesRenovado++;
             return true;
         }
@@ -66,11 +60,6 @@ public class Libro extends RecursoBase implements Prestable, Renovable {
                 ", Autor: " + autor + ", Estado: " + estado);
     }
 }
-
-
-
-
-
 
 
 

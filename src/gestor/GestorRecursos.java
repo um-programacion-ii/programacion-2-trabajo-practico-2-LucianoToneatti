@@ -37,8 +37,15 @@ public class GestorRecursos {
         }
         return null; // Si no se encuentra el recurso, se devuelve null
     }
+
+    // Método para buscar recursos por título
+    public List<RecursoDigital> buscarRecursosPorTitulo(String titulo) {
+        List<RecursoDigital> resultados = new ArrayList<>();
+        for (RecursoDigital recurso : recursos) {
+            if (recurso.getTitulo().equalsIgnoreCase(titulo)) { // Comparación insensible a mayúsculas/minúsculas
+                resultados.add(recurso);
+            }
+        }
+        return resultados;
+    }
 }
-
-
-
-

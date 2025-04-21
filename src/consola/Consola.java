@@ -1,19 +1,25 @@
 package consola;
 
+import gestor.GestorBiblioteca;
+import gestor.GestorUsuarios;
+import gestor.GestorRecursos;
 import modelo.*;
-import gestor.*;
 import notificaciones.ServicioNotificaciones;
+
+import java.util.List;
+import java.util.Scanner;
 
 public class Consola {
 
     private GestorUsuarios gestorUsuarios;
     private GestorRecursos gestorRecursos;
-    private ServicioNotificaciones servicioNotificaciones;  // Agregar la dependencia
+    private ServicioNotificaciones servicioNotificaciones;
+    private final Scanner scanner = new Scanner(System.in);  // Scanner único y reutilizable
 
-    public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones) {
+    public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones, GestorBiblioteca gestorBiblioteca) {
         this.gestorUsuarios = gestorUsuarios;
         this.gestorRecursos = gestorRecursos;
-        this.servicioNotificaciones = servicioNotificaciones;  // Asignar la dependencia
+        this.servicioNotificaciones = servicioNotificaciones;
     }
 
     public void mostrarMenuPrincipal() {
@@ -23,6 +29,8 @@ public class Consola {
         System.out.println("3. Agregar recurso");
         System.out.println("4. Listar recursos");
         System.out.println("5. Realizar operación en recurso");
+        System.out.println("6. Buscar usuario por nombre");
+        System.out.println("7. Buscar recurso por título");
         System.out.println("0. Salir");
     }
 
@@ -42,7 +50,7 @@ public class Consola {
 
     public String leerEntrada(String mensaje) {
         System.out.print(mensaje);
-        return new java.util.Scanner(System.in).nextLine();
+        return scanner.nextLine();
     }
 
     public void procesarOpcionAgregarRecurso(String opcion) {
@@ -77,21 +85,18 @@ public class Consola {
         }
     }
 
-    // Método para listar los recursos
     public void listarRecursos() {
         System.out.println("=== Listar Recursos ===");
         for (RecursoDigital recurso : gestorRecursos.getRecursos()) {
-            recurso.mostrarDetalles(); // Llamamos al método de la subclase
+            recurso.mostrarDetalles();
         }
     }
 
-    // Método para realizar operaciones en recursos
     public void realizarOperacionEnRecurso() {
         mostrarMenuOperacionesRecurso();
         String opcion = leerEntrada("Seleccione una opción: ");
         String idRecurso = leerEntrada("ID del recurso: ");
 
-        // Buscar el recurso por ID
         RecursoDigital recurso = gestorRecursos.buscarRecursoPorID(idRecurso);
         if (recurso == null) {
             System.out.println("Recurso no encontrado.");
@@ -102,7 +107,6 @@ public class Consola {
             case "1":
                 if (recurso instanceof Prestable) {
                     ((Prestable) recurso).prestar();
-                    // Enviar notificación de préstamo
                     servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido prestado.");
                 } else {
                     System.out.println("Este recurso no se puede prestar.");
@@ -111,7 +115,6 @@ public class Consola {
             case "2":
                 if (recurso instanceof Prestable) {
                     ((Prestable) recurso).devolver();
-                    // Enviar notificación de devolución
                     servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido devuelto.");
                 } else {
                     System.out.println("Este recurso no se puede devolver.");
@@ -120,7 +123,6 @@ public class Consola {
             case "3":
                 if (recurso instanceof Renovable) {
                     ((Renovable) recurso).renovar();
-                    // Enviar notificación de renovación
                     servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido renovado.");
                 } else {
                     System.out.println("Este recurso no se puede renovar.");
@@ -130,4 +132,27 @@ public class Consola {
                 System.out.println("Opción inválida.");
         }
     }
+
+    public void buscarUsuarioPorNombre() {
+        String nombre = leerEntrada("Ingrese el nombre del usuario: ");
+        Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombre);
+        if (usuario != null) {
+            System.out.println("Usuario encontrado: " + usuario);
+        } else {
+            System.out.println("Usuario no encontrado.");
+        }
+    }
+
+    public void buscarRecursoPorTitulo() {
+        String titulo = leerEntrada("Ingrese el título del recurso: ");
+        List<RecursoDigital> resultados = gestorRecursos.buscarRecursosPorTitulo(titulo);
+        if (resultados.isEmpty()) {
+            System.out.println("No se encontraron recursos.");
+        } else {
+            for (RecursoDigital recurso : resultados) {
+                recurso.mostrarDetalles();
+            }
+        }
+    }
 }
+

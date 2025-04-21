@@ -2,18 +2,12 @@ package modelo;
 
 public class Revista extends RecursoBase implements Prestable {
 
-    private String titulo;
     private String autor;
     private boolean prestado = false; // Estado de si la revista está prestada
 
     public Revista(String identificador, String titulo, String autor) {
-        super(identificador);
-        this.titulo = titulo;
+        super(identificador, titulo);
         this.autor = autor;
-    }
-
-    public String getTitulo() {
-        return titulo;
     }
 
     public String getAutor() {
@@ -51,7 +45,3 @@ public class Revista extends RecursoBase implements Prestable {
                 ", Autor: " + autor + ", Estado: " + estado);
     }
 }
-
-
-
-
