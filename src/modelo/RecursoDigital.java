@@ -6,6 +6,7 @@ public interface RecursoDigital {
     void actualizarEstado(EstadoRecurso estado);
     void mostrarDetalles();
     String getTitulo();
+    String getCategoria();
 }
 
 

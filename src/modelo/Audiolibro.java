@@ -5,15 +5,21 @@ public class Audiolibro extends RecursoBase implements Prestable {
     private String autor;
     private String duracion;
     private boolean prestado = false; // Estado de si el audiolibro está prestado
+    private String categoria;
 
-    public Audiolibro(String identificador, String titulo, String autor, String duracion) {
-        super(identificador, titulo);
+    public Audiolibro(String identificador, String titulo, String autor, String categoria, String duracion) {
+        super(identificador, titulo, categoria);
         this.autor = autor;
+        this.categoria = categoria;
         this.duracion = duracion;
     }
 
     public String getAutor() {
         return autor;
+    }
+
+    public String getCategoria() {
+        return categoria;  // Implementamos el getter para la categoría
     }
 
     public String getDuracion() {
@@ -48,6 +54,6 @@ public class Audiolibro extends RecursoBase implements Prestable {
     @Override
     public void mostrarDetalles() {
         System.out.println("Audiolibro - ID: " + identificador + ", Título: " + titulo +
-                ", Autor: " + autor + ", Duración: " + duracion + ", Estado: " + estado);
+                ", Autor: " + autor + ", Categoría: " + categoria + ", Duración: " + duracion + ", Estado: " + estado);
     }
 }

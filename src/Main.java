@@ -14,7 +14,7 @@ public class Main {
         GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos); // ✅ Instancia del gestor de biblioteca
 
         // Aquí elegimos el servicio de notificación que vamos a inyectar
-        ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail(); 
+        ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail();
 
         // ✅ Creamos consola pasando todos los gestores y el servicio de notificaciones
         Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca);
@@ -60,6 +60,10 @@ public class Main {
 
                 case "7":
                     consola.buscarRecursoPorTitulo();
+                    break;
+
+                case "8":
+                    consola.buscarPorFiltros();
                     break;
 
                 case "0":

@@ -31,6 +31,7 @@ public class Consola {
         System.out.println("5. Realizar operación en recurso");
         System.out.println("6. Buscar usuario por nombre");
         System.out.println("7. Buscar recurso por título");
+        System.out.println("8. Buscar por filtros");
         System.out.println("0. Salir");
     }
 
@@ -59,7 +60,8 @@ public class Consola {
                 String idLibro = leerEntrada("ID del libro: ");
                 String tituloLibro = leerEntrada("Título del libro: ");
                 String autorLibro = leerEntrada("Autor del libro: ");
-                Libro libro = new Libro(idLibro, tituloLibro, autorLibro);
+                String categoriaLibro = leerEntrada("Categoria del libro: ");
+                Libro libro = new Libro(idLibro, tituloLibro, autorLibro, categoriaLibro);
                 gestorRecursos.agregarRecurso(libro);
                 System.out.println("Libro agregado.");
                 break;
@@ -67,7 +69,8 @@ public class Consola {
                 String idRevista = leerEntrada("ID de la revista: ");
                 String tituloRevista = leerEntrada("Título de la revista: ");
                 String autorRevista = leerEntrada("Autor de la revista: ");
-                Revista revista = new Revista(idRevista, tituloRevista, autorRevista);
+                String categoriaRevista = leerEntrada("Categoria del revista: ");
+                Revista revista = new Revista(idRevista, tituloRevista, autorRevista, categoriaRevista);
                 gestorRecursos.agregarRecurso(revista);
                 System.out.println("Revista agregada.");
                 break;
@@ -76,7 +79,8 @@ public class Consola {
                 String tituloAudiolibro = leerEntrada("Título del audiolibro: ");
                 String autorAudiolibro = leerEntrada("Autor del audiolibro: ");
                 String duracion = leerEntrada("Duración del audiolibro: ");
-                Audiolibro audiolibro = new Audiolibro(idAudiolibro, tituloAudiolibro, autorAudiolibro, duracion);
+                String categoriaAudioLibro = leerEntrada("Categoria del Audiolibro: ");
+                Audiolibro audiolibro = new Audiolibro(idAudiolibro, tituloAudiolibro, autorAudiolibro, categoriaAudioLibro, duracion);
                 gestorRecursos.agregarRecurso(audiolibro);
                 System.out.println("Audiolibro agregado.");
                 break;
@@ -154,5 +158,52 @@ public class Consola {
             }
         }
     }
+
+    ///////////////////////////FILTROS////////////////////////////////////////////////
+
+    public void mostrarMenuBusquedaPorFiltros() {
+        System.out.println("=== Búsqueda por Filtros ===");
+        System.out.println("1. Ordenar por categoría");
+        System.out.println("2. Ordenar por título");
+        System.out.println("0. Volver al menú principal");
+    }
+
+    // Método que maneja la búsqueda por filtros
+    public void buscarPorFiltros() {
+        mostrarMenuBusquedaPorFiltros();
+        String opcion = leerEntrada("Seleccione un filtro de búsqueda: ");
+
+        switch (opcion) {
+            case "1":
+                String categoria = leerEntrada("Ingrese la categoría: ");
+                List<RecursoDigital> recursosPorCategoria = gestorRecursos.ordenarPorCategoria(categoria);
+                mostrarResultadosBusqueda(recursosPorCategoria);
+                break;
+
+            case "2":
+                String titulo = leerEntrada("Ingrese el título: ");
+                List<RecursoDigital> recursosPorTitulo = gestorRecursos.ordenarPorTitulo(titulo);
+                mostrarResultadosBusqueda(recursosPorTitulo);
+                break;
+
+            case "0":
+                break;
+
+            default:
+                System.out.println("Opción inválida.");
+        }
+    }
+
+    // Método auxiliar para mostrar los resultados de la búsqueda
+    private void mostrarResultadosBusqueda(List<RecursoDigital> recursos) {
+        if (recursos.isEmpty()) {
+            System.out.println("No se encontraron resultados.");
+        } else {
+            for (RecursoDigital recurso : recursos) {
+                recurso.mostrarDetalles();
+            }
+        }
+    }
+    //////////////////////////////////////////////////////////////////////////////////////7
 }
 
