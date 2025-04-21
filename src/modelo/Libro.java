@@ -5,21 +5,14 @@ public class Libro extends RecursoBase implements Prestable, Renovable {
     private String autor;
     private boolean prestado = false;
     private int vecesRenovado = 0;
-    private String categoria;
 
-    // ✅ Constructor actualizado con categoría
-    public Libro(String identificador, String titulo, String autor, String categoria) {
-        super(identificador, titulo, categoria); // Llama al nuevo constructor de RecursoBase
+    public Libro(String identificador, String titulo, String autor, CategoriaRecurso categoria) {
+        super(identificador, titulo, categoria); // Usa enum directamente
         this.autor = autor;
-        this.categoria = categoria;
     }
 
     public String getAutor() {
         return autor;
-    }
-
-    public String getCategoria() {
-        return categoria;
     }
 
     @Override
@@ -67,6 +60,7 @@ public class Libro extends RecursoBase implements Prestable, Renovable {
                 ", Autor: " + autor + ", Categoría: " + categoria + ", Estado: " + estado);
     }
 }
+
 
 
 

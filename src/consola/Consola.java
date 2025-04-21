@@ -60,30 +60,66 @@ public class Consola {
                 String idLibro = leerEntrada("ID del libro: ");
                 String tituloLibro = leerEntrada("Título del libro: ");
                 String autorLibro = leerEntrada("Autor del libro: ");
-                String categoriaLibro = leerEntrada("Categoria del libro: ");
+                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
+                mostrarCategoriasDisponibles();
+                String categoriaLibroStr = leerEntrada("Categoria del libro: ");
+
+                // Convertir String a CategoriaRecurso
+                CategoriaRecurso categoriaLibro = convertirACategoriaRecurso(categoriaLibroStr);
+
+                if (categoriaLibro == null) {
+                    System.out.println("Categoría no válida.");
+                    return;
+                }
+
                 Libro libro = new Libro(idLibro, tituloLibro, autorLibro, categoriaLibro);
                 gestorRecursos.agregarRecurso(libro);
                 System.out.println("Libro agregado.");
                 break;
+
             case "2":
                 String idRevista = leerEntrada("ID de la revista: ");
                 String tituloRevista = leerEntrada("Título de la revista: ");
                 String autorRevista = leerEntrada("Autor de la revista: ");
-                String categoriaRevista = leerEntrada("Categoria del revista: ");
+                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
+                mostrarCategoriasDisponibles();
+                String categoriaRevistaStr = leerEntrada("Categoria de la revista: ");
+
+                // Convertir String a CategoriaRecurso
+                CategoriaRecurso categoriaRevista = convertirACategoriaRecurso(categoriaRevistaStr);
+
+                if (categoriaRevista == null) {
+                    System.out.println("Categoría no válida.");
+                    return;
+                }
+
                 Revista revista = new Revista(idRevista, tituloRevista, autorRevista, categoriaRevista);
                 gestorRecursos.agregarRecurso(revista);
                 System.out.println("Revista agregada.");
                 break;
+
             case "3":
                 String idAudiolibro = leerEntrada("ID del audiolibro: ");
                 String tituloAudiolibro = leerEntrada("Título del audiolibro: ");
                 String autorAudiolibro = leerEntrada("Autor del audiolibro: ");
                 String duracion = leerEntrada("Duración del audiolibro: ");
-                String categoriaAudioLibro = leerEntrada("Categoria del Audiolibro: ");
+                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
+                mostrarCategoriasDisponibles();
+                String categoriaAudioLibroStr = leerEntrada("Categoria del Audiolibro: ");
+
+                // Convertir String a CategoriaRecurso
+                CategoriaRecurso categoriaAudioLibro = convertirACategoriaRecurso(categoriaAudioLibroStr);
+
+                if (categoriaAudioLibro == null) {
+                    System.out.println("Categoría no válida.");
+                    return;
+                }
+
                 Audiolibro audiolibro = new Audiolibro(idAudiolibro, tituloAudiolibro, autorAudiolibro, categoriaAudioLibro, duracion);
                 gestorRecursos.agregarRecurso(audiolibro);
                 System.out.println("Audiolibro agregado.");
                 break;
+
             default:
                 System.out.println("Opción inválida.");
         }
@@ -168,15 +204,16 @@ public class Consola {
         System.out.println("0. Volver al menú principal");
     }
 
-    // Método que maneja la búsqueda por filtros
     public void buscarPorFiltros() {
         mostrarMenuBusquedaPorFiltros();
         String opcion = leerEntrada("Seleccione un filtro de búsqueda: ");
 
         switch (opcion) {
             case "1":
+                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
+                mostrarCategoriasDisponibles();
                 String categoria = leerEntrada("Ingrese la categoría: ");
-                List<RecursoDigital> recursosPorCategoria = gestorRecursos.ordenarPorCategoria(categoria);
+                List<RecursoDigital> recursosPorCategoria = gestorRecursos.filtrarPorCategoria(CategoriaRecurso.valueOf(categoria.toUpperCase()));
                 mostrarResultadosBusqueda(recursosPorCategoria);
                 break;
 
@@ -205,5 +242,25 @@ public class Consola {
         }
     }
     //////////////////////////////////////////////////////////////////////////////////////7
+
+    // Método auxiliar para convertir el String a CategoriaRecurso
+    private CategoriaRecurso convertirACategoriaRecurso(String categoriaStr) {
+        try {
+            return CategoriaRecurso.valueOf(categoriaStr.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            return null; // Si la categoría no es válida, devolvemos null
+        }
+    }
+
+
+    /// /////////////////////////////////////////////////////////////////////////////////77
+
+    public void mostrarCategoriasDisponibles() {
+        System.out.println("=== Categorías Disponibles ===");
+        for (CategoriaRecurso categoria : CategoriaRecurso.values()) {
+            System.out.println(categoria.name());
+        }
+    }
+
 }
 

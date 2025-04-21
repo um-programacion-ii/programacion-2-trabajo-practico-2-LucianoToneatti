@@ -4,9 +4,9 @@ public abstract class RecursoBase implements RecursoDigital {
     protected String identificador;
     protected String titulo;
     protected EstadoRecurso estado;
-    protected String categoria; // ✅ Nuevo atributo
+    protected CategoriaRecurso categoria; // Usamos enum
 
-    public RecursoBase(String identificador, String titulo, String categoria) {
+    public RecursoBase(String identificador, String titulo, CategoriaRecurso categoria) {
         this.identificador = identificador;
         this.titulo = titulo;
         this.categoria = categoria;
@@ -23,8 +23,13 @@ public abstract class RecursoBase implements RecursoDigital {
         return titulo;
     }
 
-    public String getCategoria() { // ✅ Nuevo getter
+    @Override
+    public CategoriaRecurso getCategoria() {
         return categoria;
+    }
+
+    public void setCategoria(CategoriaRecurso categoria) {
+        this.categoria = categoria;
     }
 
     @Override
@@ -41,10 +46,7 @@ public abstract class RecursoBase implements RecursoDigital {
     public void mostrarDetalles() {
         System.out.println("ID: " + identificador);
         System.out.println("Título: " + titulo);
-        System.out.println("Categoría: " + categoria); // ✅ Mostramos la categoría
+        System.out.println("Categoría: " + categoria); // Enum.toString()
         System.out.println("Estado: " + estado);
     }
 }
-
-
-

@@ -3,22 +3,15 @@ package modelo;
 public class Revista extends RecursoBase implements Prestable {
 
     private String autor;
-    private boolean prestado = false; // Estado de si la revista está prestada
-    private String categoria;
+    private boolean prestado = false;
 
-    public Revista(String identificador, String titulo, String autor, String categoria) {
-        super(identificador, titulo, categoria);
+    public Revista(String identificador, String titulo, String autor, CategoriaRecurso categoria) {
+        super(identificador, titulo, categoria); // Usa enum en lugar de String
         this.autor = autor;
-        this.categoria = categoria;
-
     }
 
     public String getAutor() {
         return autor;
-    }
-
-    public String getCategoria() {
-        return categoria;  // Implementamos el getter para la categoría
     }
 
     @Override
