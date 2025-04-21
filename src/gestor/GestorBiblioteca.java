@@ -1,5 +1,6 @@
 package gestor;
 
+import excepciones.UsuarioNoEncontradoException;
 import modelo.Usuario;
 import modelo.RecursoDigital;
 
@@ -17,7 +18,7 @@ public class GestorBiblioteca {
     }
 
     // Métodos de la clase GestorBiblioteca
-    public Usuario buscarUsuarioPorNombre(String nombre) {
+    public Usuario buscarUsuarioPorNombre(String nombre) throws UsuarioNoEncontradoException {
         return gestorUsuarios.buscarUsuarioPorNombre(nombre);
     }
 

@@ -1,5 +1,8 @@
 package gestor;
 
+import excepciones.RecursoNoDisponibleException;
+import excepciones.UsuarioNoEncontradoException;
+import modelo.RecursoDigital;
 import modelo.Usuario;
 
 import java.util.HashMap;
@@ -20,20 +23,22 @@ public class GestorUsuarios {
         return usuarios.get(id);
     }
 
-    // Método para buscar un usuario por nombre
-    public Usuario buscarUsuarioPorNombre(String nombre) {
-        for (Usuario usuario : usuarios.values()) {
-            if (usuario.getNombre().equalsIgnoreCase(nombre)) { // Comparación insensible a mayúsculas/minúsculas
-                return usuario;
-            }
-        }
-        return null; // Si no se encuentra el usuario, se devuelve null
-    }
-
     public void listarUsuarios() {
         for (Usuario u : usuarios.values()) {
             System.out.println(u);
         }
     }
+
+    // Única versión del método que busca por nombre y lanza excepción si no se encuentra
+    public Usuario buscarUsuarioPorNombre(String nombre) throws UsuarioNoEncontradoException {
+        for (Usuario usuario : usuarios.values()) {
+            if (usuario.getNombre().equalsIgnoreCase(nombre)) {
+                return usuario;
+            }
+        }
+        throw new UsuarioNoEncontradoException("No se encontró un usuario con el nombre " + nombre);
+    }
+
 }
+
 
