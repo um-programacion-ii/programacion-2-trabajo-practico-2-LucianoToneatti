@@ -19,14 +19,22 @@ public class Consola {
         System.out.println("2. Listar usuarios");
         System.out.println("3. Agregar recurso");
         System.out.println("4. Listar recursos");
+        System.out.println("5. Realizar operación en recurso");
         System.out.println("0. Salir");
     }
 
     public void mostrarMenuAgregarRecurso() {
         System.out.println("=== Agregar Recurso ===");
-        System.out.println("1. Agregar Libro");
-        System.out.println("2. Agregar Revista");
-        System.out.println("3. Agregar Audiolibro");
+        System.out.println("1. Agregar Libro (Prestable y Renovable)");
+        System.out.println("2. Agregar Revista (Prestable)");
+        System.out.println("3. Agregar Audiolibro (Prestable)");
+    }
+
+    public void mostrarMenuOperacionesRecurso() {
+        System.out.println("=== Operaciones en Recurso ===");
+        System.out.println("1. Prestar Recurso (Libro, Revista, Audiolibro)");
+        System.out.println("2. Devolver Recurso (Libro, Revista, Audiolibro)");
+        System.out.println("3. Renovar Recurso (solo Libro)");
     }
 
     public String leerEntrada(String mensaje) {
@@ -62,15 +70,63 @@ public class Consola {
         }
     }
 
-    // Método para listar los recursos
     public void listarRecursos() {
         System.out.println("=== Listar Recursos ===");
         for (RecursoDigital recurso : gestorRecursos.getRecursos()) {
-            recurso.mostrarDetalles(); // Llamamos al método de la subclase
+            recurso.mostrarDetalles();
+        }
+    }
+
+    public void realizarOperacionEnRecurso() {
+        mostrarMenuOperacionesRecurso();
+        String opcion = leerEntrada("Seleccione una opción: ");
+        String idRecurso = leerEntrada("ID del recurso: ");
+
+        RecursoDigital recurso = gestorRecursos.buscarRecursoPorID(idRecurso);
+        if (recurso == null) {
+            System.out.println("Recurso no encontrado.");
+            return;
+        }
+
+        switch (opcion) {
+            case "1":
+                if (recurso instanceof Prestable) {
+                    boolean exito = ((Prestable) recurso).prestar();
+                    if (exito) {
+                        System.out.println("Recurso prestado con éxito.");
+                    } else {
+                        System.out.println("No se pudo prestar el recurso (¿ya está prestado?).");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede prestar.");
+                }
+                break;
+            case "2":
+                if (recurso instanceof Prestable) {
+                    boolean exito = ((Prestable) recurso).devolver();
+                    if (exito) {
+                        System.out.println("Recurso devuelto con éxito.");
+                    } else {
+                        System.out.println("No se pudo devolver el recurso (¿ya estaba disponible?).");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede devolver.");
+                }
+                break;
+            case "3":
+                if (recurso instanceof Renovable) {
+                    boolean exito = ((Renovable) recurso).renovar();
+                    if (exito) {
+                        System.out.println("Recurso renovado con éxito.");
+                    } else {
+                        System.out.println("No se pudo renovar el recurso (¿está disponible?).");
+                    }
+                } else {
+                    System.out.println("Este recurso no se puede renovar.");
+                }
+                break;
+            default:
+                System.out.println("Opción inválida.");
         }
     }
 }
-
-
-
-

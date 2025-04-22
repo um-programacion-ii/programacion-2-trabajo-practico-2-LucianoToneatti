@@ -38,6 +38,9 @@ public class Main {
                     System.out.println("=== Lista de Recursos ===");
                     gestorRecursos.listarRecursos();
                     break;
+                case "5":
+                    consola.realizarOperacionEnRecurso();
+                    break;
                 case "0":
                     salir = true;
                     break;
@@ -49,6 +52,7 @@ public class Main {
         System.out.println("¡Programa finalizado!");
     }
 }
+
 
 
 

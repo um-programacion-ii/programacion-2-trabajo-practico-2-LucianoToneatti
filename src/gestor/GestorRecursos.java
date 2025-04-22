@@ -21,12 +21,24 @@ public class GestorRecursos {
         return recursos;
     }
 
+    // Método para listar los recursos
     public void listarRecursos() {
         for (RecursoDigital recurso : recursos) {
             System.out.println("Recurso ID: " + recurso.getIdentificador() + ", Estado: " + recurso.getEstado());
         }
     }
+
+    // Método para buscar un recurso por su ID
+    public RecursoDigital buscarRecursoPorID(String id) {
+        for (RecursoDigital recurso : recursos) {
+            if (recurso.getIdentificador().equals(id)) {
+                return recurso;
+            }
+        }
+        return null; // Si no se encuentra el recurso, se devuelve null
+    }
 }
+
 
 
 

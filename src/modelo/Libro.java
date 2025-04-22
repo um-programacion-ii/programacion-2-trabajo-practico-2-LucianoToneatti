@@ -15,7 +15,18 @@ public class Libro extends RecursoBase {
 
     @Override
     public void mostrarDetalles() {
-        System.out.println("Libro - ID: " + identificador + ", Autor: " + autor + ", Estado: " + estado);
+        System.out.println("Libro - ID: " + identificador +
+                ", Autor: " + autor +
+                ", Estado: " + estado);
     }
 }
+
+
+
+
+
+
+
+
+
 
