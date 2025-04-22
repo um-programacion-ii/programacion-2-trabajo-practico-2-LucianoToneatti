@@ -7,7 +7,7 @@ public class ComparadorCategorias implements Comparator<RecursoDigital> {
 
     @Override
     public int compare(RecursoDigital recurso1, RecursoDigital recurso2) {
-        return recurso1.getCategoria().compareToIgnoreCase(recurso2.getCategoria());
+        return recurso1.getCategoria().compareTo(recurso2.getCategoria());
     }
 }
 
