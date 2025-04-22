@@ -1,8 +1,5 @@
 import consola.Consola;
-import gestor.GestorBiblioteca;
-import gestor.GestorPrestamos;
-import gestor.GestorRecursos;
-import gestor.GestorUsuarios;
+import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
 import notificaciones.ServicioNotificacionesEmail; // O ServicioNotificacionesSMS
@@ -17,7 +14,7 @@ public class Main {
 
         // Aquí elegimos el servicio de notificación que vamos a inyectar
         ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail();
-
+        GestorNotificaciones gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
         // ✅ Creamos consola pasando todos los gestores y el servicio de notificaciones
         Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca);
 
@@ -89,7 +86,7 @@ public class Main {
                     System.out.println("Opción inválida.");
             }
         }
-
+        gestorNotificaciones.cerrar();
         System.out.println("¡Programa finalizado!");
     }
 }
