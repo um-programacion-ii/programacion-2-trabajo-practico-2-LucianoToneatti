@@ -1,4 +1,5 @@
 import consola.Consola;
+import gestor.GestorBiblioteca;
 import gestor.GestorRecursos;
 import gestor.GestorUsuarios;
 import modelo.*;
@@ -10,13 +11,13 @@ public class Main {
     public static void main(String[] args) {
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         GestorRecursos gestorRecursos = new GestorRecursos();
+        GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos); // ✅ Instancia del gestor de biblioteca
 
         // Aquí elegimos el servicio de notificación que vamos a inyectar
-        ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail(); // También podés probar con ServicioNotificacionesSMS
+        ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail(); 
 
-
-        // Creamos consola pasando los gestores y el servicio de notificaciones
-        Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones);
+        // ✅ Creamos consola pasando todos los gestores y el servicio de notificaciones
+        Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca);
 
         boolean salir = false;
 
@@ -53,6 +54,14 @@ public class Main {
                     consola.realizarOperacionEnRecurso();
                     break;
 
+                case "6":
+                    consola.buscarUsuarioPorNombre();
+                    break;
+
+                case "7":
+                    consola.buscarRecursoPorTitulo();
+                    break;
+
                 case "0":
                     salir = true;
                     break;
@@ -65,6 +74,7 @@ public class Main {
         System.out.println("¡Programa finalizado!");
     }
 }
+
 
 
 
