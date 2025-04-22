@@ -1,5 +1,6 @@
 package consola;
 
+import excepciones.UsuarioNoEncontradoException;
 import gestor.GestorBiblioteca;
 import gestor.GestorUsuarios;
 import gestor.GestorRecursos;
@@ -175,13 +176,14 @@ public class Consola {
 
     public void buscarUsuarioPorNombre() {
         String nombre = leerEntrada("Ingrese el nombre del usuario: ");
-        Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombre);
-        if (usuario != null) {
+        try {
+            Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombre);
             System.out.println("Usuario encontrado: " + usuario);
-        } else {
-            System.out.println("Usuario no encontrado.");
+        } catch (UsuarioNoEncontradoException e) {
+            System.out.println(e.getMessage());
         }
     }
+
 
     public void buscarRecursoPorTitulo() {
         String titulo = leerEntrada("Ingrese el título del recurso: ");

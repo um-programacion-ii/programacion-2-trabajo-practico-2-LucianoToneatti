@@ -1,5 +1,6 @@
 package gestor;
 
+import excepciones.RecursoNoDisponibleException;
 import modelo.RecursoDigital;
 import comparadores.ComparadorTitulos;
 import comparadores.ComparadorCategorias;
@@ -72,6 +73,19 @@ public class GestorRecursos {
                 .sorted(new ComparadorTitulos())
                 .collect(Collectors.toList());
     }
+    /// ///////////////////////////////////////////////////////////////////////////////////////////
+    public void realizarOperacionRecurso(String idRecurso) throws RecursoNoDisponibleException {
+        RecursoDigital recurso = buscarRecursoPorID(idRecurso);
+        if (recurso == null) {
+            throw new RecursoNoDisponibleException("El recurso con ID " + idRecurso + " no está disponible.");
+        }
+        // Operaciones con el recurso
+    }
+
+
+    /// ///////////////////////////////////////////////////////////////////////////////////////////
+
+
 }
 
 
