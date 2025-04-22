@@ -16,6 +16,11 @@ public class GestorRecursos {
         recursos.add(recurso);
     }
 
+    // Método para obtener la lista de recursos
+    public List<RecursoDigital> getRecursos() {
+        return recursos;
+    }
+
     public void listarRecursos() {
         for (RecursoDigital recurso : recursos) {
             System.out.println("Recurso ID: " + recurso.getIdentificador() + ", Estado: " + recurso.getEstado());

@@ -61,7 +61,16 @@ public class Consola {
                 System.out.println("Opción inválida.");
         }
     }
+
+    // Método para listar los recursos
+    public void listarRecursos() {
+        System.out.println("=== Listar Recursos ===");
+        for (RecursoDigital recurso : gestorRecursos.getRecursos()) {
+            recurso.mostrarDetalles(); // Llamamos al método de la subclase
+        }
+    }
 }
+
 
 
 
