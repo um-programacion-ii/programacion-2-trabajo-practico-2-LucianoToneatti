@@ -1,29 +1,27 @@
 package gestor;
 
 import modelo.RecursoDigital;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GestorRecursos {
-    private Map<String, RecursoDigital> recursos;
+
+    private List<RecursoDigital> recursos;
 
     public GestorRecursos() {
-        this.recursos = new HashMap<>();
+        this.recursos = new ArrayList<>();
     }
 
     public void agregarRecurso(RecursoDigital recurso) {
-        recursos.put(recurso.getIdentificador(), recurso);
-    }
-
-    public RecursoDigital buscarRecursoPorId(String id) {
-        return recursos.get(id);
+        recursos.add(recurso);
     }
 
     public void listarRecursos() {
-        for (RecursoDigital r : recursos.values()) {
-            System.out.println(r);
+        for (RecursoDigital recurso : recursos) {
+            System.out.println("Recurso ID: " + recurso.getIdentificador() + ", Estado: " + recurso.getEstado());
         }
     }
 }
+
+
 
