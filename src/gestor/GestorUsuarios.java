@@ -29,8 +29,8 @@ public class GestorUsuarios {
         }
     }
 
-    // Única versión del método que busca por nombre y lanza excepción si no se encuentra
-    public Usuario buscarUsuarioPorNombre(String nombre) throws UsuarioNoEncontradoException {
+    // Versión que lanza una excepción si no encuentra el usuario
+    public Usuario buscarUsuarioPorNombreConExcepcion(String nombre) throws UsuarioNoEncontradoException {
         for (Usuario usuario : usuarios.values()) {
             if (usuario.getNombre().equalsIgnoreCase(nombre)) {
                 return usuario;
@@ -39,6 +39,16 @@ public class GestorUsuarios {
         throw new UsuarioNoEncontradoException("No se encontró un usuario con el nombre " + nombre);
     }
 
+    // Versión alternativa que devuelve null si no encuentra el usuario
+    public Usuario buscarUsuarioPorNombre(String nombre) {
+        for (Usuario usuario : usuarios.values()) {
+            if (usuario.getNombre().equalsIgnoreCase(nombre)) {
+                return usuario;
+            }
+        }
+        return null;
+    }
 }
+
 
 

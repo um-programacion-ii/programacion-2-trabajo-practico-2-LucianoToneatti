@@ -1,6 +1,7 @@
 package gestor;
 
 import excepciones.RecursoNoDisponibleException;
+import modelo.RecursoBase;
 import modelo.RecursoDigital;
 import comparadores.ComparadorTitulos;
 import comparadores.ComparadorCategorias;
@@ -84,6 +85,15 @@ public class GestorRecursos {
 
 
     /// ///////////////////////////////////////////////////////////////////////////////////////////
+
+    public RecursoBase buscarRecursoPorTitulo(String titulo) {
+        for (RecursoDigital recurso : recursos) {
+            if (recurso.getTitulo().equalsIgnoreCase(titulo)) {
+                return (RecursoBase) recurso;
+            }
+        }
+        return null;
+    }
 
 
 }
