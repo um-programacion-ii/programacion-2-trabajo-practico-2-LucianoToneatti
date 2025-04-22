@@ -2,13 +2,15 @@ package modelo;
 
 public abstract class RecursoBase implements RecursoDigital {
     protected String identificador;
-    protected String titulo; // ➕ Nuevo atributo
+    protected String titulo;
     protected EstadoRecurso estado;
+    protected String categoria; // ✅ Nuevo atributo
 
-    public RecursoBase(String identificador, String titulo) {
+    public RecursoBase(String identificador, String titulo, String categoria) {
         this.identificador = identificador;
         this.titulo = titulo;
-        this.estado = EstadoRecurso.DISPONIBLE; // Estado inicial por defecto
+        this.categoria = categoria;
+        this.estado = EstadoRecurso.DISPONIBLE;
     }
 
     @Override
@@ -16,8 +18,13 @@ public abstract class RecursoBase implements RecursoDigital {
         return identificador;
     }
 
-    public String getTitulo() { // ➕ Nuevo getter
+    @Override
+    public String getTitulo() {
         return titulo;
+    }
+
+    public String getCategoria() { // ✅ Nuevo getter
+        return categoria;
     }
 
     @Override
@@ -34,8 +41,10 @@ public abstract class RecursoBase implements RecursoDigital {
     public void mostrarDetalles() {
         System.out.println("ID: " + identificador);
         System.out.println("Título: " + titulo);
+        System.out.println("Categoría: " + categoria); // ✅ Mostramos la categoría
         System.out.println("Estado: " + estado);
     }
 }
+
 
 

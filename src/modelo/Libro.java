@@ -3,16 +3,23 @@ package modelo;
 public class Libro extends RecursoBase implements Prestable, Renovable {
 
     private String autor;
-    private boolean prestado = false; // Estado de si el libro está prestado
-    private int vecesRenovado = 0;    // Contador de veces renovado
+    private boolean prestado = false;
+    private int vecesRenovado = 0;
+    private String categoria;
 
-    public Libro(String identificador, String titulo, String autor) {
-        super(identificador, titulo); // Nuevo constructor con título
+    // ✅ Constructor actualizado con categoría
+    public Libro(String identificador, String titulo, String autor, String categoria) {
+        super(identificador, titulo, categoria); // Llama al nuevo constructor de RecursoBase
         this.autor = autor;
+        this.categoria = categoria;
     }
 
     public String getAutor() {
         return autor;
+    }
+
+    public String getCategoria() {
+        return categoria;
     }
 
     @Override
@@ -57,9 +64,10 @@ public class Libro extends RecursoBase implements Prestable, Renovable {
     @Override
     public void mostrarDetalles() {
         System.out.println("Libro - ID: " + identificador + ", Título: " + titulo +
-                ", Autor: " + autor + ", Estado: " + estado);
+                ", Autor: " + autor + ", Categoría: " + categoria + ", Estado: " + estado);
     }
 }
+
 
 
 
