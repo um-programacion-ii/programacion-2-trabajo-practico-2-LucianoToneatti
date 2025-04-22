@@ -8,6 +8,7 @@ import modelo.*;
 import notificaciones.ServicioNotificaciones;
 
 import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 public class Consola {
@@ -15,7 +16,7 @@ public class Consola {
     private GestorUsuarios gestorUsuarios;
     private GestorRecursos gestorRecursos;
     private ServicioNotificaciones servicioNotificaciones;
-    private final Scanner scanner = new Scanner(System.in);  // Scanner único y reutilizable
+    private final Scanner scanner = new Scanner(System.in);
 
     public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones, GestorBiblioteca gestorBiblioteca) {
         this.gestorUsuarios = gestorUsuarios;
@@ -49,6 +50,8 @@ public class Consola {
         System.out.println("1. Prestar Recurso");
         System.out.println("2. Devolver Recurso");
         System.out.println("3. Renovar Recurso (solo libros)");
+        System.out.println("4. Reservar recurso");
+        System.out.println("5. Ver todas las Reservas de un Recurso");
     }
 
     public String leerEntrada(String mensaje) {
@@ -62,11 +65,8 @@ public class Consola {
                 String idLibro = leerEntrada("ID del libro: ");
                 String tituloLibro = leerEntrada("Título del libro: ");
                 String autorLibro = leerEntrada("Autor del libro: ");
-                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
                 mostrarCategoriasDisponibles();
                 String categoriaLibroStr = leerEntrada("Categoria del libro: ");
-
-                // Convertir String a CategoriaRecurso
                 CategoriaRecurso categoriaLibro = convertirACategoriaRecurso(categoriaLibroStr);
 
                 if (categoriaLibro == null) {
@@ -83,11 +83,8 @@ public class Consola {
                 String idRevista = leerEntrada("ID de la revista: ");
                 String tituloRevista = leerEntrada("Título de la revista: ");
                 String autorRevista = leerEntrada("Autor de la revista: ");
-                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
                 mostrarCategoriasDisponibles();
                 String categoriaRevistaStr = leerEntrada("Categoria de la revista: ");
-
-                // Convertir String a CategoriaRecurso
                 CategoriaRecurso categoriaRevista = convertirACategoriaRecurso(categoriaRevistaStr);
 
                 if (categoriaRevista == null) {
@@ -105,11 +102,8 @@ public class Consola {
                 String tituloAudiolibro = leerEntrada("Título del audiolibro: ");
                 String autorAudiolibro = leerEntrada("Autor del audiolibro: ");
                 String duracion = leerEntrada("Duración del audiolibro: ");
-                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
                 mostrarCategoriasDisponibles();
                 String categoriaAudioLibroStr = leerEntrada("Categoria del Audiolibro: ");
-
-                // Convertir String a CategoriaRecurso
                 CategoriaRecurso categoriaAudioLibro = convertirACategoriaRecurso(categoriaAudioLibroStr);
 
                 if (categoriaAudioLibro == null) {
@@ -137,54 +131,155 @@ public class Consola {
     public void realizarOperacionEnRecurso() {
         mostrarMenuOperacionesRecurso();
         String opcion = leerEntrada("Seleccione una opción: ");
-        String idRecurso = leerEntrada("ID del recurso: ");
 
-        RecursoDigital recurso = gestorRecursos.buscarRecursoPorID(idRecurso);
+        // Manejar caso 5 por separado antes de pedir usuario
+        if (opcion.equals("5")) {
+            String titulo = leerEntrada("Ingrese el título del recurso: ");
+            RecursoBase recursoBase = gestorRecursos.buscarRecursoPorTitulo(titulo);
+
+            if (recursoBase == null) {
+                System.out.println("Recurso no encontrado.");
+                return;
+            }
+
+            Queue<Reserva> reservas = recursoBase.getReservas();
+            if (reservas.isEmpty()) {
+                System.out.println("No hay reservas para este recurso.");
+            } else {
+                System.out.println("Reservas para " + recursoBase.getTitulo() + ":");
+                reservas.forEach(reserva -> {
+                    System.out.println("- " + reserva.getUsuario().getNombre() + " | Fecha: " + reserva.getFechaReserva());
+                });
+            }
+            return;  // Importante: salir para no continuar con el resto del método
+        }
+
+        // Pedir recurso
+        String titulo = leerEntrada("Ingrese el título del recurso: ");
+        RecursoBase recurso = gestorRecursos.buscarRecursoPorTitulo(titulo);
+
         if (recurso == null) {
             System.out.println("Recurso no encontrado.");
             return;
         }
 
+        // Pedir usuario
+        String nombreUsuario = leerEntrada("Ingrese el nombre del usuario: ");
+        Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombreUsuario);
+
+        if (usuario == null) {
+            System.out.println("Usuario no encontrado.");
+            return;
+        }
+
+
         switch (opcion) {
             case "1":
-                if (recurso instanceof Prestable) {
-                    ((Prestable) recurso).prestar();
-                    servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido prestado.");
+                if (recurso instanceof Prestable prestable) {
+                    if (prestable.prestar()) {
+                        System.out.println("Préstamo exitoso.");
+                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Se te ha prestado el recurso: " + recurso.getTitulo());
+                    } else {
+                        System.out.println("No se pudo prestar el recurso.");
+                    }
                 } else {
                     System.out.println("Este recurso no se puede prestar.");
                 }
                 break;
+
             case "2":
-                if (recurso instanceof Prestable) {
-                    ((Prestable) recurso).devolver();
-                    servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido devuelto.");
+                if (recurso instanceof Prestable prestable) {
+                    if (prestable.devolver()) {
+                        System.out.println("Devolución exitosa.");
+                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has devuelto el recurso: " + recurso.getTitulo());
+
+                        // Si hay reservas, asignar recurso automáticamente
+                        if (recurso instanceof RecursoBase recursoBase && recursoBase.tieneReservas()) {
+                            Reserva siguienteReserva = recursoBase.obtenerProximaReserva();
+                            recursoBase.setUsuarioActual(siguienteReserva.getUsuario());
+                            recurso.actualizarEstado(EstadoRecurso.PRESTADO);
+
+                            System.out.println("El recurso ha sido asignado automáticamente a: " + siguienteReserva.getUsuario().getNombre());
+                            servicioNotificaciones.enviarNotificacion(
+                                    siguienteReserva.getUsuario().getEmail(),
+                                    "El recurso '" + recurso.getTitulo() + "' ahora está disponible y ha sido asignado a vos."
+                            );
+                        }
+
+                    } else {
+                        System.out.println("No se pudo devolver el recurso.");
+                    }
                 } else {
                     System.out.println("Este recurso no se puede devolver.");
                 }
                 break;
+
+
             case "3":
-                if (recurso instanceof Renovable) {
-                    ((Renovable) recurso).renovar();
-                    servicioNotificaciones.enviarNotificacion("usuario@example.com", "Tu recurso ha sido renovado.");
+                if (recurso instanceof Libro libro) {
+                    if (libro.renovar()) {
+                        System.out.println("Renovación exitosa. Veces renovado: " + libro.getVecesRenovado());
+                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has renovado el libro: " + recurso.getTitulo());
+                    } else {
+                        System.out.println("No se pudo renovar el recurso.");
+                    }
                 } else {
-                    System.out.println("Este recurso no se puede renovar.");
+                    System.out.println("Solo los libros pueden renovarse.");
                 }
                 break;
+
             default:
                 System.out.println("Opción inválida.");
+
+            case "4":
+                if (recurso instanceof RecursoBase recursoBase) {
+                    int prioridad;
+                    try {
+                        prioridad = Integer.parseInt(leerEntrada("Ingrese la prioridad de la reserva (0 = mayor prioridad): "));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Prioridad inválida. Se asignará prioridad por defecto (5).");
+                        prioridad = 5;
+                    }
+
+                    Reserva reserva = new Reserva(usuario, recursoBase, prioridad);
+                    recursoBase.agregarReserva(reserva);
+
+                    System.out.println("Reserva realizada con éxito.");
+                    servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has reservado el recurso: " + recurso.getTitulo());
+                } else {
+                    System.out.println("Este recurso no puede ser reservado.");
+                }
+                break;
+
+            case "5":
+                String tituloRecurso = leerEntrada("Ingrese el título del recurso: ");
+                RecursoDigital recursoEncontrado = gestorRecursos.buscarRecursoPorTitulo(tituloRecurso);
+
+                if (recursoEncontrado == null) {
+                    System.out.println("Recurso no encontrado.");
+                    break;
+                }
+
+                if (recursoEncontrado instanceof RecursoBase recursoBase) {
+                    recursoBase.mostrarReservas();
+                } else {
+                    System.out.println("Este recurso no tiene reservas asociadas.");
+                }
+                break;
+
+
         }
     }
 
     public void buscarUsuarioPorNombre() {
         String nombre = leerEntrada("Ingrese el nombre del usuario: ");
         try {
-            Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombre);
+            Usuario usuario = gestorUsuarios.buscarUsuarioPorNombreConExcepcion(nombre);
             System.out.println("Usuario encontrado: " + usuario);
         } catch (UsuarioNoEncontradoException e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     public void buscarRecursoPorTitulo() {
         String titulo = leerEntrada("Ingrese el título del recurso: ");
@@ -198,12 +293,10 @@ public class Consola {
         }
     }
 
-    ///////////////////////////FILTROS////////////////////////////////////////////////
-
     public void mostrarMenuBusquedaPorFiltros() {
         System.out.println("=== Búsqueda por Filtros ===");
         System.out.println("1. Ordenar por categoría");
-        System.out.println("2. Ordenar por título");
+        System.out.println("2. Buscar por título");
         System.out.println("0. Volver al menú principal");
     }
 
@@ -213,7 +306,6 @@ public class Consola {
 
         switch (opcion) {
             case "1":
-                // Mostrar categorías disponibles antes de que el usuario ingrese la categoría
                 mostrarCategoriasDisponibles();
                 String categoria = leerEntrada("Ingrese la categoría: ");
                 List<RecursoDigital> recursosPorCategoria = gestorRecursos.filtrarPorCategoria(CategoriaRecurso.valueOf(categoria.toUpperCase()));
@@ -222,7 +314,7 @@ public class Consola {
 
             case "2":
                 String titulo = leerEntrada("Ingrese el título: ");
-                List<RecursoDigital> recursosPorTitulo = gestorRecursos.ordenarPorTitulo(titulo);
+                List<RecursoDigital> recursosPorTitulo = gestorRecursos.buscarRecursosPorTitulo(titulo);
                 mostrarResultadosBusqueda(recursosPorTitulo);
                 break;
 
@@ -234,7 +326,6 @@ public class Consola {
         }
     }
 
-    // Método auxiliar para mostrar los resultados de la búsqueda
     private void mostrarResultadosBusqueda(List<RecursoDigital> recursos) {
         if (recursos.isEmpty()) {
             System.out.println("No se encontraron resultados.");
@@ -244,19 +335,14 @@ public class Consola {
             }
         }
     }
-    //////////////////////////////////////////////////////////////////////////////////////7
 
-    // Método auxiliar para convertir el String a CategoriaRecurso
     private CategoriaRecurso convertirACategoriaRecurso(String categoriaStr) {
         try {
             return CategoriaRecurso.valueOf(categoriaStr.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return null; // Si la categoría no es válida, devolvemos null
+            return null;
         }
     }
-
-
-    /// /////////////////////////////////////////////////////////////////////////////////77
 
     public void mostrarCategoriasDisponibles() {
         System.out.println("=== Categorías Disponibles ===");
@@ -264,6 +350,5 @@ public class Consola {
             System.out.println(categoria.name());
         }
     }
-
 }
 
