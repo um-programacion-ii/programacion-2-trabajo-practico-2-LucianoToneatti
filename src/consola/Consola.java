@@ -2,6 +2,7 @@ package consola;
 
 import excepciones.UsuarioNoEncontradoException;
 import gestor.GestorBiblioteca;
+import gestor.GestorNotificaciones;
 import gestor.GestorUsuarios;
 import gestor.GestorRecursos;
 import modelo.*;
@@ -17,11 +18,15 @@ public class Consola {
     private GestorRecursos gestorRecursos;
     private ServicioNotificaciones servicioNotificaciones;
     private final Scanner scanner = new Scanner(System.in);
+    private final GestorNotificaciones gestorNotificaciones;
+
 
     public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones, GestorBiblioteca gestorBiblioteca) {
         this.gestorUsuarios = gestorUsuarios;
         this.gestorRecursos = gestorRecursos;
         this.servicioNotificaciones = servicioNotificaciones;
+        this.gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
+
     }
 
     public void mostrarMenuPrincipal() {
@@ -178,7 +183,12 @@ public class Consola {
                 if (recurso instanceof Prestable prestable) {
                     if (prestable.prestar()) {
                         System.out.println("Préstamo exitoso.");
-                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Se te ha prestado el recurso: " + recurso.getTitulo());
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Se te ha prestado el recurso: " + recurso.getTitulo());
+                        try {
+                            Thread.sleep(100); // 100 milisegundos
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt(); // buena práctica
+                        }
                     } else {
                         System.out.println("No se pudo prestar el recurso.");
                     }
@@ -191,7 +201,12 @@ public class Consola {
                 if (recurso instanceof Prestable prestable) {
                     if (prestable.devolver()) {
                         System.out.println("Devolución exitosa.");
-                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has devuelto el recurso: " + recurso.getTitulo());
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has devuelto el recurso: " + recurso.getTitulo());
+                        try {
+                            Thread.sleep(100); // 100 milisegundos
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt(); // buena práctica
+                        }
 
                         // Si hay reservas, asignar recurso automáticamente
                         if (recurso instanceof RecursoBase recursoBase && recursoBase.tieneReservas()) {
@@ -200,10 +215,15 @@ public class Consola {
                             recurso.actualizarEstado(EstadoRecurso.PRESTADO);
 
                             System.out.println("El recurso ha sido asignado automáticamente a: " + siguienteReserva.getUsuario().getNombre());
-                            servicioNotificaciones.enviarNotificacion(
+                            gestorNotificaciones.enviarNotificacionAsync(
                                     siguienteReserva.getUsuario().getEmail(),
                                     "El recurso '" + recurso.getTitulo() + "' ahora está disponible y ha sido asignado a vos."
                             );
+                            try {
+                                Thread.sleep(100); // 100 milisegundos
+                            } catch (InterruptedException e) {
+                                Thread.currentThread().interrupt(); // buena práctica
+                            }
                         }
 
                     } else {
@@ -219,7 +239,12 @@ public class Consola {
                 if (recurso instanceof Libro libro) {
                     if (libro.renovar()) {
                         System.out.println("Renovación exitosa. Veces renovado: " + libro.getVecesRenovado());
-                        servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has renovado el libro: " + recurso.getTitulo());
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has renovado el libro: " + recurso.getTitulo());
+                        try {
+                            Thread.sleep(100); // 100 milisegundos
+                        } catch (InterruptedException e) {
+                            Thread.currentThread().interrupt(); // buena práctica
+                        }
                     } else {
                         System.out.println("No se pudo renovar el recurso.");
                     }
@@ -245,7 +270,12 @@ public class Consola {
                     recursoBase.agregarReserva(reserva);
 
                     System.out.println("Reserva realizada con éxito.");
-                    servicioNotificaciones.enviarNotificacion(usuario.getEmail(), "Has reservado el recurso: " + recurso.getTitulo());
+                    gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has reservado el recurso: " + recurso.getTitulo());
+                    try {
+                        Thread.sleep(100); // 100 milisegundos
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // buena práctica
+                    }
                 } else {
                     System.out.println("Este recurso no puede ser reservado.");
                 }
