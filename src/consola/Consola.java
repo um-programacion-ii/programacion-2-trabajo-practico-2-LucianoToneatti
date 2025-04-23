@@ -1,11 +1,13 @@
 package consola;
 
+import alertas.NivelUrgencia;
 import excepciones.UsuarioNoEncontradoException;
 import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
 import alertas.AlertaDisponibilidad;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
@@ -46,6 +48,7 @@ public class Consola {
         System.out.println("8. Buscar por filtros");
         System.out.println("9. Registrar prestamo");
         System.out.println("10. Ver estadísticas y reportes");
+        System.out.println("11. Configuración de notificaciones");
         System.out.println("0. Salir");
     }
 
@@ -192,7 +195,8 @@ public class Consola {
                 if (recurso instanceof Prestable prestable) {
                     if (prestable.prestar()) {
                         System.out.println("Préstamo exitoso.");
-                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Se te ha prestado el recurso: " + recurso.getTitulo());
+                        if (!usuario.getNotificacionesActivas().isEmpty()) {
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Se te ha prestado el recurso: " + recurso.getTitulo()); }
                         try {
                             Thread.sleep(100); // 100 milisegundos
                         } catch (InterruptedException e) {
@@ -210,7 +214,8 @@ public class Consola {
                 if (recurso instanceof Prestable prestable) {
                     if (prestable.devolver()) {
                         System.out.println("Devolución exitosa.");
-                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has devuelto el recurso: " + recurso.getTitulo());
+                        if (!usuario.getNotificacionesActivas().isEmpty()) {
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has devuelto el recurso: " + recurso.getTitulo()); }
                         try {
                             Thread.sleep(100); // 100 milisegundos
                         } catch (InterruptedException e) {
@@ -224,10 +229,10 @@ public class Consola {
                             recurso.actualizarEstado(EstadoRecurso.PRESTADO);
 
                             System.out.println("El recurso ha sido asignado automáticamente a: " + siguienteReserva.getUsuario().getNombre());
+                            if (!usuario.getNotificacionesActivas().isEmpty()) {
                             gestorNotificaciones.enviarNotificacionAsync(
                                     siguienteReserva.getUsuario().getEmail(),
-                                    "El recurso '" + recurso.getTitulo() + "' ahora está disponible y ha sido asignado a vos."
-                            );
+                                    "El recurso '" + recurso.getTitulo() + "' ahora está disponible y ha sido asignado a vos."); }
                             try {
                                 Thread.sleep(100); // 100 milisegundos
                             } catch (InterruptedException e) {
@@ -253,7 +258,8 @@ public class Consola {
                 if (recurso instanceof Libro libro) {
                     if (libro.renovar()) {
                         System.out.println("Renovación exitosa. Veces renovado: " + libro.getVecesRenovado());
-                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has renovado el libro: " + recurso.getTitulo());
+                        if (!usuario.getNotificacionesActivas().isEmpty()) {
+                        gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has renovado el libro: " + recurso.getTitulo()); }
                         try {
                             Thread.sleep(100); // 100 milisegundos
                         } catch (InterruptedException e) {
@@ -284,7 +290,8 @@ public class Consola {
                     recursoBase.agregarReserva(reserva);
 
                     System.out.println("Reserva realizada con éxito.");
-                    gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has reservado el recurso: " + recurso.getTitulo());
+                    if (!usuario.getNotificacionesActivas().isEmpty()) {
+                    gestorNotificaciones.enviarNotificacionAsync(usuario.getEmail(), "Has reservado el recurso: " + recurso.getTitulo()); }
                     try {
                         Thread.sleep(100); // 100 milisegundos
                     } catch (InterruptedException e) {
@@ -395,12 +402,52 @@ public class Consola {
         }
     }
 
-    /// //////////////////////////77777777
+    /// //////////////////////////
     public void mostrarEstadisticasYReportes() {
         gestorReportes.reporteGeneralPrestamos();
         gestorReportes.recursosMasPrestados();
         gestorReportes.prestamosActivos();
     }
-    /// ////////////////////////////////////
+    /////////////////////////////
+
+    public void configurarNotificaciones() {
+        System.out.println("=== Configuración de Notificaciones ===");
+
+        String nombreUsuario = leerEntrada("Ingrese el nombre del usuario: ");
+        Usuario usuario = gestorUsuarios.buscarUsuarioPorNombre(nombreUsuario);
+
+        if (usuario == null) {
+            System.out.println("Usuario no encontrado.");
+            return;
+        }
+
+        System.out.println("Notificaciones actuales: " + (!usuario.getNotificacionesActivas().isEmpty() ? "Activadas" : "Desactivadas"));
+        System.out.println("1. Activar notificaciones");
+        System.out.println("2. Desactivar notificaciones");
+        System.out.println("3. Ver historial de alertas");
+        System.out.println("0. Volver");
+        String opcion = leerEntrada("Seleccione una opción: ");
+
+        switch (opcion) {
+            case "1":
+                usuario.setNotificacionesActivas(EnumSet.of(NivelUrgencia.INFO, NivelUrgencia.WARNING));
+
+                System.out.println("Notificaciones activadas.");
+                break;
+            case "2":
+                usuario.setNotificacionesActivas(EnumSet.of(NivelUrgencia.INFO, NivelUrgencia.WARNING));
+                System.out.println("Notificaciones desactivadas.");
+                break;
+            case "3":
+                AlertaDisponibilidad.mostrarHistorial();  // Llamamos a la función para mostrar el historial
+                break;
+            case "0":
+                break;
+
+            default:
+                System.out.println("Opción inválida.");
+        }
+    }
+
 }
 
