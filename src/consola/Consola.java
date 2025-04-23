@@ -129,10 +129,13 @@ public class Consola {
 
     public void listarRecursos() {
         System.out.println("=== Listar Recursos ===");
-        for (RecursoDigital recurso : gestorRecursos.getRecursos()) {
+
+        // Iterar sobre los valores del mapa
+        for (RecursoBase recurso : gestorRecursos.getRecursos().values()) {
             recurso.mostrarDetalles();
         }
     }
+
 
     public void realizarOperacionEnRecurso() {
         mostrarMenuOperacionesRecurso();

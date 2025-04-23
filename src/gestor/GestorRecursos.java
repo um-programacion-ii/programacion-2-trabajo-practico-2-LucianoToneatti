@@ -6,9 +6,8 @@ import modelo.RecursoDigital;
 import comparadores.ComparadorTitulos;
 import comparadores.ComparadorCategorias;
 import comparadores.ComparadorEstados;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 // Importar tu enum
@@ -16,18 +15,16 @@ import modelo.CategoriaRecurso;
 
 public class GestorRecursos {
 
-    private List<RecursoDigital> recursos;
+    private List<RecursoBase> recursos;
+
+
 
     public GestorRecursos() {
         this.recursos = new ArrayList<>();
     }
 
-    public void agregarRecurso(RecursoDigital recurso) {
+    public void agregarRecurso(RecursoBase recurso) {
         recursos.add(recurso);
-    }
-
-    public List<RecursoDigital> getRecursos() {
-        return recursos;
     }
 
     public void listarRecursos() {
@@ -93,6 +90,14 @@ public class GestorRecursos {
             }
         }
         return null;
+    }
+
+    public Map<String, RecursoBase> getRecursos() {
+        Map<String, RecursoBase> recursosMap = new HashMap<>();
+        for (RecursoBase recurso : recursos) {
+            recursosMap.put(recurso.getIdentificador(), recurso);
+        }
+        return recursosMap;
     }
 }
 
