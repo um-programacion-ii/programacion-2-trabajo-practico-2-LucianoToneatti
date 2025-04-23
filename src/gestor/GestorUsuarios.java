@@ -48,6 +48,10 @@ public class GestorUsuarios {
         }
         return null;
     }
+    public Map<String, Usuario> getUsuarios() {
+        return this.usuarios;
+    }
+
 }
 
 

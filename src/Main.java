@@ -1,9 +1,13 @@
+import alertas.AlertaVencimiento;
 import consola.Consola;
 import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
 import notificaciones.ServicioNotificacionesEmail;
 import gestor.GestorReportes;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main {
 
@@ -28,9 +32,22 @@ public class Main {
         // Crear la consola, pasando todos los gestores y servicios requeridos
         Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca, gestorReportes);
 
+        // Crear la instancia de AlertaVencimiento
+        Map<String, RecursoDigital> recursosDigitales = new HashMap<>();
+        for (Map.Entry<String, RecursoBase> entry : gestorRecursos.getRecursos().entrySet()) {
+            recursosDigitales.put(entry.getKey(), entry.getValue());
+        }
+
+        AlertaVencimiento alertaVencimiento = new AlertaVencimiento(
+                gestorPrestamos.getListaPrestamos(),
+                gestorUsuarios.getUsuarios(),
+                recursosDigitales
+        );
+
         boolean salir = false;
 
         while (!salir) {
+            alertaVencimiento.verificarAlertas();
             consola.mostrarMenuPrincipal();
             String opcion = consola.leerEntrada("Seleccione una opción: ");
 
