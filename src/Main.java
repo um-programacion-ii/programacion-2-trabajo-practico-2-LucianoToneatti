@@ -1,3 +1,4 @@
+import alertas.AlertaDisponibilidad;
 import alertas.AlertaVencimiento;
 import consola.Consola;
 import gestor.*;
@@ -21,21 +22,23 @@ public class Main {
         ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail();
         GestorNotificaciones gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
 
-        // Crear el gestor de biblioteca (requiere usuarios y recursos)
+        // Crear el gestor de biblioteca
         GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos);
 
-        // Crear el gestor de reportes (requiere lista de préstamos, usuarios y recursos)
+        // Crear el gestor de reportes
         GestorReportes gestorReportes = new GestorReportes(
                 gestorPrestamos.getListaPrestamos(), gestorUsuarios, gestorRecursos
         );
 
-        // Crear la consola, pasando todos los gestores y servicios requeridos
+        // Crear la consola
         Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca, gestorReportes);
 
-        // Crear la instancia de AlertaVencimiento
+        // Crear alerta de vencimiento
         Map<String, RecursoDigital> recursosDigitales = new HashMap<>();
         for (Map.Entry<String, RecursoBase> entry : gestorRecursos.getRecursos().entrySet()) {
-            recursosDigitales.put(entry.getKey(), entry.getValue());
+            if (entry.getValue() instanceof RecursoDigital) {
+                recursosDigitales.put(entry.getKey(), (RecursoDigital) entry.getValue());
+            }
         }
 
         AlertaVencimiento alertaVencimiento = new AlertaVencimiento(
@@ -44,10 +47,24 @@ public class Main {
                 recursosDigitales
         );
 
+        // Crear alerta de disponibilidad
+        AlertaDisponibilidad alertaDisponibilidad = new AlertaDisponibilidad(
+                gestorRecursos,
+                gestorUsuarios,
+                gestorRecursos.getRecursos()
+        );
+
         boolean salir = false;
 
         while (!salir) {
+            // Verificar alertas antes de mostrar el menú
             alertaVencimiento.verificarAlertas();
+
+            // Verificar recursos disponibles y notificar a usuarios en espera
+            for (RecursoBase recurso : gestorRecursos.getRecursos().values()) {
+                alertaDisponibilidad.mostrarAlertaDisponibilidad(recurso);
+            }
+
             consola.mostrarMenuPrincipal();
             String opcion = consola.leerEntrada("Seleccione una opción: ");
 
@@ -105,6 +122,10 @@ public class Main {
                     consola.mostrarEstadisticasYReportes();
                     break;
 
+                case "11":
+                    consola.configurarNotificaciones();
+                    break;
+
                 case "0":
                     salir = true;
                     break;
@@ -113,6 +134,7 @@ public class Main {
                     System.out.println("Opción inválida.");
             }
         }
+
         gestorNotificaciones.cerrar();
         System.out.println("¡Programa finalizado!");
     }
