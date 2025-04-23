@@ -1,3 +1,4 @@
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/tc38IXJF)
 # 📚 Trabajo Práctico: Sistema de Gestión de Biblioteca Digital (Java 21+)
 
 ## 📌 Objetivo General
@@ -5,34 +6,117 @@
 Desarrollar un sistema de gestión de biblioteca digital que implemente los cinco principios SOLID, programación orientada a objetos, y conceptos avanzados de Java. El sistema deberá manejar diferentes tipos de recursos digitales, préstamos, reservas, y notificaciones en tiempo real.
 
 ## 👨‍🎓 Información del Alumno
-- **Nombre y Apellido**: [Nombre y Apellido del Alumno]
+- **Nombre y Apellido**: Luciano Toneatti
 
-## 📋 Requisitos Adicionales
+## 📋 Documentación del Sistema
 
-### Documentación del Sistema
-Como parte del trabajo práctico, deberás incluir en este README una guía de uso que explique:
 
-1. **Cómo funciona el sistema**:
-   - Descripción general de la arquitectura
-   - Explicación de los componentes principales
-   - Flujo de trabajo del sistema
+   ### **Arquitectura del sistema**
 
-2. **Cómo ponerlo en funcionamiento**:
-   - Deberás incluir las instrucciones detalladas de puesta en marcha
-   - Explicar los requisitos previos necesarios
-   - Describir el proceso de compilación
-   - Detallar cómo ejecutar la aplicación
+El sistema está diseñado con una arquitectura modular orientada a objetos. Se divide en los siguientes módulos principales:
 
-3. **Cómo probar cada aspecto desarrollado**:
-   - Deberás proporcionar ejemplos de uso para cada funcionalidad implementada
-   - Incluir casos de prueba que demuestren el funcionamiento del sistema
-   - Describir flujos de trabajo completos que muestren la interacción entre diferentes componentes
+##### Componentes clave
 
-La guía debe ser clara, concisa y permitir a cualquier usuario entender y probar el sistema. Se valorará especialmente:
-- La claridad de las instrucciones
-- La completitud de la documentación
-- La organización de la información
-- La inclusión de ejemplos prácticos
+- Consola: Este maneja la interfaz y sus opciones.
+- Gestor: Controla los diferentesgestores como los de Notificaciones, Prestamo, Recursos, Usuarios etc.
+- Modelo: Clases que representan las entidades del sistema mas relevantes.
+- Alertas: Lógica de recordatorio para notificaciones avisos relacionados con disponibilidad y vencimiento.
+
+#### Cumple con Principios SOLID 
+- SRP
+- OCP
+- LSP
+- ISP
+- DIP
+
+#### 🔄 Flujo de Trabajo
+
+* Registro de usuarios.
+* Registro de recursos.
+* Préstamos, devoluciones y reservas por parte de usuarios.
+* Registrar los prestamos.
+* Generación automática de alertas.
+* Ver estadísticas y reportes.
+
+### 🚀 Puesta en Marcha
+
+#### Requisitos Previos
+
+* Java 21 o superior
+* IntelliJ IDEA o alguna otra opcion como Eclipse IDE o VSCode con extensión de Java
+* Git
+
+#### Proceso
+
+📥 Clonar el repositorio
+Desde la terminal o consola Git, ejecutar el siguiente comando:
+```java
+git clone git@github.com:um-programacion-ii/programacion-2-trabajo-practico-2-LucianoToneatti.git
+```
+Entrar a la carpeta clonada(varia segun donde lo hayas clonado)
+```java
+cd programacion-2-trabajo-practico-2-LucianoToneatti/
+```
+Descargar complilador
+```java
+sudo apt install default-jdk
+```
+Compilar el trabajo
+```java
+find src -name "*.java" > sources.txt
+javac -d out @sources.txt
+```
+Ejecutar
+```java
+java -cp out Main
+```
+
+### Ejemplo de Uso y Guía
+   
+#### Usuarios
+- Estos pueden ser agregados y se les añaden Id, nombre y email.
+- Podes buscar un usuario en especifico por su nombre.
+- Además podes ver una Lista de Usuarios.
+
+#### Recursos
+- Estos pueden ser agregados y se les añaden Id, Titulo, Autor y categoría(TERROR, ARTE, etc)
+- Podes buscar un recurso especifico por su titulo
+- Mediante un filtro ordenar por categoría.
+- Podes ver una lista de todos los recursos.
+
+#### Prestamos, Devoluciones, Renovar y Reservas
+- Hago un prestamo registrando Titulo del recurso y nombre del usuario.
+- Hago una reserva si el recurso esta ocupado.
+- Podes ver todas las reservas d eun recurso especifico.
+- Hago una devolucion y se libera el recurso, si hay alguien en reserva este toma el recurso.
+
+#### Recordatorios y Alertas
+- Cuando un prestamo esta por vencer te avisa 1 día antes y el mismo dia que vence.
+- Avisa si hay un recurso disponible y si no hay usuarios en espera para tomarlo.
+
+#### Reportes 
+- Ver luego de que han habido prstamos los Recursos mas prestados
+- Ver Prestamos Activos
+
+#### Ejemplo
+
+##### Usuarios y Prestamo
+- Agrego usuario ---> Id: 1, nombre: Luc, email: luc@gmail.com
+- Agrego recurso ---> Id: 2, titulo: Principito, autor: Don Julio, categoría: AVENTURA
+- El recurso 'Principito' está disponible pero no hay usuarios en espera.
+- Préstamo exitoso. Enviando email a: luc@gmial.com, Mensaje: Se te ha prestado el recurso: Principito
+
+##### Devolver y Reservar
+- Agrego otro usuario Ivan el cual reserva el Principito
+- Reserva agregada: Ivan para el recurso: Principito con prioridad: 5, Reserva realizada con éxito.
+- Enviando email a: ivan@gmail.com, Mensaje: Has reservado el recurso: Principito.
+- Luc devuelve el recurso Principito
+- El recurso ha sido asignado automáticamente a: Ivan
+
+##### Notificaciones
+- Vamos a Configuración de notificaciones
+- Ahí podemos activar y desactivar las notificaciones 
+- Y ver el Historial de alertas de cada Usuario ingresando su nombre
 
 ### Prueba de Funcionalidades
 
@@ -387,6 +471,22 @@ El uso inadecuado de IA puede resultar en:
 - Sanciones académicas
 - Pérdida de oportunidades de aprendizaje
 - Impacto negativo en tu desarrollo profesional
+
+### Uso de la IA en el proyecto
+
+Durante el desarrollo de este proyecto, utilice inteligencia artificial como herramienta de ayuda para mejorar la productividad y resolver dudas técnicas.
+
+Herramientas Utilizadas
+GitHub Copilot: Me proponia mejoras, cambios o soluciones a errores de código mientras programaba.
+
+ChatGPT: Consultas específicas relacionadas a diseño de métodos, lógica de programación, solución de errores o mejoras para tener mejores practicas.
+
+Justificación del uso de IA fue principalmente para acelerar la implementación de ideas que ya tenía pensado muchas ideas pero plasmarlas en codigo me podria haber tomado mucho más tiempo.
+Consultar formas eficientes de implementar métodos o aplicar patrones de diseño básicos.
+
+La verdad es que no puedo señalar exactamente qué línea o parte hizo la IA, porque fue todo parte del mismo proceso: probar, adaptar, cambiar, corregir, y seguir. 
+Pero en todo momento entendí lo que estaba escribiendo y lo ajusté según las necesidades del proyecto.
+
 
 ## 📝 Licencia
 
