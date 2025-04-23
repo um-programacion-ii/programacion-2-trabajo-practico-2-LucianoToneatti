@@ -8,6 +8,7 @@ import java.util.List;
 public class GestorPrestamos {
     private List<Prestamo> prestamos = new ArrayList<>();
 
+
     public void registrarPrestamo(String idUsuario, String idRecurso, LocalDate fechaPrestamo, LocalDate fechaDevolucion) {
         Prestamo p = new Prestamo(idUsuario, idRecurso, fechaPrestamo, fechaDevolucion);
         prestamos.add(p);
@@ -29,6 +30,11 @@ public class GestorPrestamos {
     public List<Prestamo> getPrestamos() {
         return prestamos;
     }
+
+    public List<Prestamo> getListaPrestamos() {
+        return this.prestamos;
+    }
+
 
 }
 
