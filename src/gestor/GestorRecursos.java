@@ -1,6 +1,7 @@
 package gestor;
 
 import excepciones.RecursoNoDisponibleException;
+import modelo.EstadoRecurso;
 import modelo.RecursoBase;
 import modelo.RecursoDigital;
 import comparadores.ComparadorTitulos;
@@ -79,8 +80,6 @@ public class GestorRecursos {
         }
         // Operaciones con el recurso
     }
-
-
     /// ///////////////////////////////////////////////////////////////////////////////////////////
 
     public RecursoBase buscarRecursoPorTitulo(String titulo) {
@@ -98,6 +97,20 @@ public class GestorRecursos {
             recursosMap.put(recurso.getIdentificador(), recurso);
         }
         return recursosMap;
+    }
+
+    // Método para obtener recursos disponibles
+    public List<RecursoDigital> obtenerRecursosDisponibles() {
+        List<RecursoDigital> recursosDisponibles = new ArrayList<>();
+        for (RecursoBase recurso : recursos) {
+            if (recurso instanceof RecursoDigital) {
+                RecursoDigital recursoDigital = (RecursoDigital) recurso;
+                if (recursoDigital.getEstado() == EstadoRecurso.DISPONIBLE) {
+                    recursosDisponibles.add(recursoDigital);
+                }
+            }
+        }
+        return recursosDisponibles;
     }
 }
 
