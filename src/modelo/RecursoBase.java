@@ -121,10 +121,6 @@ public abstract class RecursoBase implements RecursoDigital {
         this.usuarioActual = null;
         System.out.println("Recurso devuelto y ahora disponible para nuevas reservas.");
     }
-
-    /// ///////////////////////////////////////////////////////////////////
-
-
 }
 
 

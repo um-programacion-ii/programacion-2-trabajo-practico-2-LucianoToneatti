@@ -4,12 +4,15 @@ import excepciones.UsuarioNoEncontradoException;
 import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
+import alertas.AlertaDisponibilidad;
 
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
 public class Consola {
+
+    private AlertaDisponibilidad alertaDisponibilidad;
 
     private GestorUsuarios gestorUsuarios;
     private GestorRecursos gestorRecursos;
@@ -27,6 +30,8 @@ public class Consola {
         this.gestorBiblioteca = gestorBiblioteca;
         this.gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
         this.gestorReportes = gestorReportes;
+        this.alertaDisponibilidad = new AlertaDisponibilidad(gestorRecursos, gestorUsuarios, gestorRecursos.getRecursos());
+
     }
 
     public void mostrarMenuPrincipal() {
@@ -230,6 +235,10 @@ public class Consola {
                             }
                         }
 
+                        // **Aquí agregar la verificación de disponibilidad**
+                        if (recurso instanceof RecursoDigital) {
+                            alertaDisponibilidad.mostrarAlertaDisponibilidad(recurso);
+                        }
                     } else {
                         System.out.println("No se pudo devolver el recurso.");
                     }
@@ -237,6 +246,7 @@ public class Consola {
                     System.out.println("Este recurso no se puede devolver.");
                 }
                 break;
+
 
 
             case "3":
