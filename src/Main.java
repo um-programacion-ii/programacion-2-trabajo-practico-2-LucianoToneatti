@@ -2,21 +2,31 @@ import consola.Consola;
 import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
-import notificaciones.ServicioNotificacionesEmail; // O ServicioNotificacionesSMS
+import notificaciones.ServicioNotificacionesEmail;
+import gestor.GestorReportes;
 
 public class Main {
 
     public static void main(String[] args) {
+        // Inicialización de los gestores
         GestorUsuarios gestorUsuarios = new GestorUsuarios();
         GestorRecursos gestorRecursos = new GestorRecursos();
-        GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos); // ✅ Instancia del gestor de biblioteca
         GestorPrestamos gestorPrestamos = new GestorPrestamos();
 
-        // Aquí elegimos el servicio de notificación que vamos a inyectar
+        // Crear servicio de notificaciones e inyectarlo en el gestor
         ServicioNotificaciones servicioNotificaciones = new ServicioNotificacionesEmail();
         GestorNotificaciones gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
-        // ✅ Creamos consola pasando todos los gestores y el servicio de notificaciones
-        Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca);
+
+        // Crear el gestor de biblioteca (requiere usuarios y recursos)
+        GestorBiblioteca gestorBiblioteca = new GestorBiblioteca(gestorUsuarios, gestorRecursos);
+
+        // Crear el gestor de reportes (requiere lista de préstamos, usuarios y recursos)
+        GestorReportes gestorReportes = new GestorReportes(
+                gestorPrestamos.getListaPrestamos(), gestorUsuarios, gestorRecursos
+        );
+
+        // Crear la consola, pasando todos los gestores y servicios requeridos
+        Consola consola = new Consola(gestorUsuarios, gestorRecursos, servicioNotificaciones, gestorBiblioteca, gestorReportes);
 
         boolean salir = false;
 
@@ -75,7 +85,7 @@ public class Main {
                     break;
 
                 case "10":
-                    gestorPrestamos.mostrarPrestamos();
+                    consola.mostrarEstadisticasYReportes();
                     break;
 
                 case "0":
@@ -90,6 +100,7 @@ public class Main {
         System.out.println("¡Programa finalizado!");
     }
 }
+
 
 
 

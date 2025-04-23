@@ -25,4 +25,17 @@ public class GestorBiblioteca {
     public List<RecursoDigital> buscarRecursosPorTitulo(String titulo) {
         return gestorRecursos.buscarRecursosPorTitulo(titulo);
     }
+
+    /// ///////////////7
+    public void generarReportePrestamosPorUsuario() {
+        // tu implementación
+    }
+
+    public void generarReporteRecursosMasPrestados() {
+        // tu implementación
+    }
+
+    public void mostrarEstadisticasPorCategoria() {
+        // tu implementación
+    }
 }

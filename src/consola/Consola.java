@@ -1,10 +1,7 @@
 package consola;
 
 import excepciones.UsuarioNoEncontradoException;
-import gestor.GestorBiblioteca;
-import gestor.GestorNotificaciones;
-import gestor.GestorUsuarios;
-import gestor.GestorRecursos;
+import gestor.*;
 import modelo.*;
 import notificaciones.ServicioNotificaciones;
 
@@ -16,17 +13,20 @@ public class Consola {
 
     private GestorUsuarios gestorUsuarios;
     private GestorRecursos gestorRecursos;
+    private final GestorBiblioteca gestorBiblioteca;
     private ServicioNotificaciones servicioNotificaciones;
     private final Scanner scanner = new Scanner(System.in);
     private final GestorNotificaciones gestorNotificaciones;
+    private final GestorReportes gestorReportes;
 
 
-    public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones, GestorBiblioteca gestorBiblioteca) {
+    public Consola(GestorUsuarios gestorUsuarios, GestorRecursos gestorRecursos, ServicioNotificaciones servicioNotificaciones, GestorBiblioteca gestorBiblioteca, GestorReportes gestorReportes) {
         this.gestorUsuarios = gestorUsuarios;
         this.gestorRecursos = gestorRecursos;
         this.servicioNotificaciones = servicioNotificaciones;
+        this.gestorBiblioteca = gestorBiblioteca;
         this.gestorNotificaciones = new GestorNotificaciones(servicioNotificaciones);
-
+        this.gestorReportes = gestorReportes;
     }
 
     public void mostrarMenuPrincipal() {
@@ -40,6 +40,7 @@ public class Consola {
         System.out.println("7. Buscar recurso por título");
         System.out.println("8. Buscar por filtros");
         System.out.println("9. Registrar prestamo");
+        System.out.println("10. Ver estadísticas y reportes");
         System.out.println("0. Salir");
     }
 
@@ -380,5 +381,13 @@ public class Consola {
             System.out.println(categoria.name());
         }
     }
+
+    /// //////////////////////////77777777
+    public void mostrarEstadisticasYReportes() {
+        gestorReportes.reporteGeneralPrestamos();
+        gestorReportes.recursosMasPrestados();
+        gestorReportes.prestamosActivos();
+    }
+    /// ////////////////////////////////////
 }
 
